@@ -1,4 +1,4 @@
-const {h, Component} = require('preact');
+const {h, Component, Fragment} = require('preact');
 
 const {render} = require('./preact-render-spy');
 
@@ -58,4 +58,19 @@ it('renders to a specified depth', () => {
   expect(context.find('ErrorIfRendered').length).toBe(2);
 
   expect(() => render(<First />, { depth: 3 })).toThrow();
+});
+
+it(`renders components with fragment`, () => {
+  const Node = () => <Fragment>
+    <div>
+      <span>SpanOne</span>
+      <span>SpanTwo</span>
+    </div>
+    <div>
+      <span>SpanThree</span>
+    </div>
+    <span>SpanFour</span>
+  </Fragment>;
+  const context = render(<Node />);
+  expect(context.find('span').first().text()).toBe('SpanOne');
 });

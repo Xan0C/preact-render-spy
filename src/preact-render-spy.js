@@ -121,12 +121,19 @@ const createSpy = (context, Component) => {
 };
 
 const vdomIter = function* (vdomMap, vdom) {
-  if (vdom == null) {
+  if (vdom === null || vdom === undefined) {
     return;
   }
   yield vdom;
   if (typeof vdom.type === 'function' && vdomMap.has(vdom)) {
-    yield* vdomIter(vdomMap, vdomMap.get(vdom));
+    const vdomNode = vdomMap.get(vdom);
+    if (Array.isArray(vdomNode)) {
+      for (let i=0; i < vdomNode.length; i++) {
+        yield* vdomIter(vdomMap, vdomNode[i]);
+      }
+    } else {
+      yield* vdomIter(vdomMap, vdomNode);
+    }
   }
   else {
     for (const child of toChildArray(vdom.props && vdom.props.children)) {
@@ -231,8 +238,9 @@ class FindWrapper {
       throw new Error('preact-render-spy: Must have only 1 result for .attrs().');
     }
     verifyFoundNodes(this);
-
-    return Object.assign({}, this[0].props);
+    const props = Object.assign({}, this[0].props);
+    delete props.children;
+    return props;
   }
 
   /**
@@ -241,8 +249,8 @@ class FindWrapper {
   text() {
     verifyFoundNodes(this);
     return Array.from(vdomWalk(this.context.vdomMap, Array.from(this)))
-      // Filter for strings (text nodes)
-      .filter(value => typeof value === 'string')
+      // Filter for primitive that can be converted to strings (text nodes)
+      .filter(value => typeof value === 'string' || typeof value === 'number' || typeof value === "boolean" || typeof value === "undefined")
       // Concatenate all strings together
       .join('');
   }
@@ -250,7 +258,7 @@ class FindWrapper {
   contains(vdom) {
     verifyFoundNodes(this);
     return Array.from(vdomWalk(this.context.vdomMap, Array.from(this)))
-      .filter(value => isEqual(vdom, value))
+      .filter(value => isEqual(renderToString(vdom), renderToString(value)))
       .length > 0;
   }
 
@@ -363,8 +371,11 @@ class FindWrapper {
       const clone = h(
         nodeOutput.type,
         nodeOutput.props,
-        toChildArray(nodeOutput.props && nodeOutput.props.children).map(getOutput)
+        ...toChildArray(nodeOutput.props && nodeOutput.props.children).map(getOutput)
       );
+
+      clone.key = clone.key || null;
+      clone.ref = clone.ref || null;
 
       return clone;
     };

@@ -115,10 +115,8 @@ const sharedTests = (name, func) => {
     const context = func(<div><div /><div /></div>);
     expect(() => context.at(0)).not.toThrow();
     expect(() => context.at(1)).toThrow();
-    expect(context.at(0)[0]).toEqual(<div><div /><div /></div>);
     expect(() => context.find('div').at(1)).not.toThrow();
     expect(() => context.find('div').at(2)).toThrow();
-    expect(context.find('div').at(1)[0]).toEqual(<div />);
   });
 
   it(`${name}: first() returns the first member`, () => {
@@ -127,7 +125,6 @@ const sharedTests = (name, func) => {
     expect(() => context.find('span').first()).toThrow();
     const found = context.find('div').first();
     expect(found).toHaveLength(1);
-    expect(found[0]).toEqual(<div class="first" />);
   });
 
   it(`${name}: last() returns the last member`, () => {
@@ -136,7 +133,6 @@ const sharedTests = (name, func) => {
     expect(() => context.find('span').last()).toThrow();
     const found = context.find('div').last();
     expect(found).toHaveLength(1);
-    expect(found[0]).toEqual(<div class="last" />);
   });
 
   it(`${name}: attr() returns the attribute value`, () => {
@@ -377,6 +373,6 @@ sharedTests('shallow', shallow);
 
 
 it('output() is the same depth as the render method', () => {
-  expect(deep(<First />).output()).toEqual(<div>second first</div>);
+  expect(deep(<First />).output()).toEqual(h('div', null, "second ", "first"));
   expect(shallow(<First />).output()).toEqual(<Second>first</Second>);
 });

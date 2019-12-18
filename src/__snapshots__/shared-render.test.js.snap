@@ -21,7 +21,27 @@ preact-render-spy (3 nodes)
 
 `;
 
-exports[`deep: output matches snapshot 1`] = `<div>second first</div>`;
+exports[`deep: output matches snapshot 1`] = `
+Object {
+  "__": null,
+  "__b": 0,
+  "__c": null,
+  "__d": undefined,
+  "__e": null,
+  "__k": null,
+  "__v": [Circular],
+  "constructor": undefined,
+  "key": null,
+  "props": Object {
+    "children": Array [
+      "second ",
+      "first",
+    ],
+  },
+  "ref": null,
+  "type": "div",
+}
+`;
 
 exports[`deep: snapshots for text nodes 1`] = `
 preact-render-spy (1 nodes)
@@ -67,7 +87,24 @@ preact-render-spy (3 nodes)
 
 `;
 
-exports[`shallow: output matches snapshot 1`] = `<Second>first</Second>`;
+exports[`shallow: output matches snapshot 1`] = `
+Object {
+  "__": null,
+  "__b": 0,
+  "__c": null,
+  "__d": undefined,
+  "__e": null,
+  "__k": null,
+  "__v": [Circular],
+  "constructor": undefined,
+  "key": null,
+  "props": Object {
+    "children": "first",
+  },
+  "ref": null,
+  "type": [Function],
+}
+`;
 
 exports[`shallow: snapshots for text nodes 1`] = `
 preact-render-spy (1 nodes)

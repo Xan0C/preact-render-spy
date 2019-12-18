@@ -24,7 +24,7 @@ module.exports = {
     },
   },
   "globals": {
-    "sleep": 1,
+    "sleep": "off",
   },
   "rules": {
     // only allow JSX in .test.js files

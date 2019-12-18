@@ -48,7 +48,8 @@ const _isWhere = (where, target) => {
 
     // Null check
     if (value === null) {
-      if (target[key] !== null) {
+      // eslint-disable-next-line no-prototype-builtins
+      if (!target.hasOwnProperty(key)) {
         return false;
       }
       continue;
